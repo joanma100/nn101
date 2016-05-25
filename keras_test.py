@@ -9,9 +9,9 @@ import sys
 
 
 
-s1 = 'baca'*100;
-l1_size = 300
-l2_size = 300
+s1 = 'sarajovebalasch'*400;
+l1_size = 500
+l2_size = 200
 l3_size = 200
 
 score = s1
@@ -24,7 +24,7 @@ notes_indices = dict((n, i) for i, n in enumerate(notes))
 indices_notes = dict((i, n) for i, n in enumerate(notes))
 
 # cut the text in semi-redundant sequences of maxlen characters
-maxlen = 30
+maxlen = 80
 step = 3
 
 bars = []
@@ -33,7 +33,6 @@ next_notes = []
 for i in range(0, len(score) - maxlen, step):
 	bars.append(score[i: i + maxlen])
 	next_notes.append(score[i + maxlen])
-	print(score[i: i + maxlen], score[i + maxlen])
 
 print('nb sequences:', len(bars))
 
@@ -50,9 +49,11 @@ for i, bars in enumerate(bars):
 # build the model: 2 stacked LSTM
 print('Build model...')
 model = Sequential()
-model.add(LSTM(l1_size, return_sequences=False, input_shape=(maxlen, len(notes))))
+model.add(LSTM(l1_size, return_sequences=True, input_shape=(maxlen, len(notes))))
 model.add(Dropout(0.2))
-#model.add(LSTM(l2_size, return_sequences=False))
+model.add(LSTM(l2_size, return_sequences=False))
+model.add(Dropout(0.2))
+#model.add(LSTM(l3_size, return_sequences=False))
 #model.add(Dropout(0.2))
 model.add(Dense(len(notes)))
 model.add(Activation('softmax'))
