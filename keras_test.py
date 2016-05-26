@@ -9,10 +9,11 @@ import sys
 
 
 
-s1 = 'sarajovebalasch'*400;
+s1 = 's a r i  j o v i  s a r a  j o v e  s o r o  j o v o  '*200;
 l1_size = 500
-l2_size = 200
-l3_size = 200
+l2_size = 500
+l3_size = 500
+l4_size = 500
 
 score = s1
 notes = set(s1)
@@ -24,7 +25,7 @@ notes_indices = dict((n, i) for i, n in enumerate(notes))
 indices_notes = dict((i, n) for i, n in enumerate(notes))
 
 # cut the text in semi-redundant sequences of maxlen characters
-maxlen = 80
+maxlen = 30
 step = 3
 
 bars = []
@@ -51,14 +52,16 @@ print('Build model...')
 model = Sequential()
 model.add(LSTM(l1_size, return_sequences=True, input_shape=(maxlen, len(notes))))
 model.add(Dropout(0.2))
-model.add(LSTM(l2_size, return_sequences=False))
+model.add(LSTM(l2_size, return_sequences=True))
 model.add(Dropout(0.2))
-#model.add(LSTM(l3_size, return_sequences=False))
-#model.add(Dropout(0.2))
+model.add(LSTM(l3_size, return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(l4_size, return_sequences=False))
+model.add(Dropout(0.2))
 model.add(Dense(len(notes)))
 model.add(Activation('softmax'))
 
-model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
+model.compile(loss='binary_crossentropy', optimizer='rmsprop')
 
 
 def sample(a, temperature=1.0):
@@ -76,12 +79,13 @@ for iteration in range(1, 60):
 
 	start_index = random.randint(0, len(score) - maxlen - 1)
 
-	for diversity in [0.2, 0.5, 1.0, 1.2]:
+	for diversity in [1.]:
 		print()
 		print('----- diversity:', diversity)
 
 		generated = ''
-		phrase = score[start_index: start_index + maxlen]
+		#phrase = score[start_index: start_index + maxlen]
+		phrase = 's a r a  '		
 		generated += phrase
 		print('----- Generating with seed: "' + phrase + '"')
 		sys.stdout.write(generated+' ')
