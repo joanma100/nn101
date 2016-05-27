@@ -9,7 +9,7 @@ import sys
 
 
 
-s1 = 's a r i  j o v i  s a r a  j o v e  s o r o  j o v o  '*200;
+s1 = 's a r i  j o v i  s a r a  j o v e  s o r o  j o v o  '*50;
 l1_size = 500
 l2_size = 500
 l3_size = 500
@@ -61,7 +61,7 @@ model.add(Dropout(0.2))
 model.add(Dense(len(notes)))
 model.add(Activation('softmax'))
 
-model.compile(loss='binary_crossentropy', optimizer='rmsprop')
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
 
 def sample(a, temperature=1.0):
@@ -90,7 +90,7 @@ for iteration in range(1, 60):
 		print('----- Generating with seed: "' + phrase + '"')
 		sys.stdout.write(generated+' ')
 
-		for i in range(400):
+		for i in range(70):
 			xv = np.zeros((1, maxlen, len(notes)))
 			for t, note in enumerate(phrase):
 				xv[0, t, notes_indices[note]] = 1.
