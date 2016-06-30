@@ -8,18 +8,20 @@ import random
 import sys
 
 
+file_path = '../datasets/text/quijote.txt'
+fh = open(file_path,"r")
+s1 = fh.read()
 
-s1 = 's a r i  j o v i  s a r a  j o v e  s o r o  j o v o  '*50;
-l1_size = 500
-l2_size = 500
-l3_size = 500
-l4_size = 500
+l1_size = 50
+l2_size = 50
+l3_size = 50
+l4_size = 50
 
 score = s1
 notes = set(s1)
 
 
-print('Total notes:', len(notes))
+print('Total chars:', len(notes))
 
 notes_indices = dict((n, i) for i, n in enumerate(notes))
 indices_notes = dict((i, n) for i, n in enumerate(notes))
@@ -75,7 +77,8 @@ for iteration in range(1, 60):
 	print()
 	print('-' * 50)
 	print('Iteration', iteration)
-	model.fit(x, y, batch_size=128, nb_epoch=10)
+	print(np.shape(x), np.shape(y))
+	model.fit(x, y, batch_size=128, nb_epoch=1)
 
 	start_index = random.randint(0, len(score) - maxlen - 1)
 
@@ -84,8 +87,7 @@ for iteration in range(1, 60):
 		print('----- diversity:', diversity)
 
 		generated = ''
-		#phrase = score[start_index: start_index + maxlen]
-		phrase = 's a r a  '		
+		phrase = score[start_index: start_index + maxlen]
 		generated += phrase
 		print('----- Generating with seed: "' + phrase + '"')
 		sys.stdout.write(generated+' ')
