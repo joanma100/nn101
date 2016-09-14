@@ -8,14 +8,14 @@ import random
 import sys
 
 
-file_path = '../datasets/text/quijote.txt'
+file_path = '../datasets/text/llull/obresdoctrinalis01llul_djvu.txt'
 fh = open(file_path,"r")
 s1 = fh.read()
 
-l1_size = 50
-l2_size = 50
+l1_size = 512
+l2_size = 250
 l3_size = 50
-l4_size = 50
+l4_size = 512
 
 score = s1
 notes = set(s1)
@@ -53,13 +53,13 @@ for i, bars in enumerate(bars):
 print('Build model...')
 model = Sequential()
 model.add(LSTM(l1_size, return_sequences=True, input_shape=(maxlen, len(notes))))
-model.add(Dropout(0.2))
-model.add(LSTM(l2_size, return_sequences=True))
-model.add(Dropout(0.2))
-model.add(LSTM(l3_size, return_sequences=True))
-model.add(Dropout(0.2))
+model.add(Dropout(0.5))
+#model.add(LSTM(l2_size, return_sequences=True))
+#model.add(Dropout(0.2))
+#model.add(LSTM(l3_size, return_sequences=True))
+#model.add(Dropout(0.2))
 model.add(LSTM(l4_size, return_sequences=False))
-model.add(Dropout(0.2))
+model.add(Dropout(0.5))
 model.add(Dense(len(notes)))
 model.add(Activation('softmax'))
 
@@ -82,7 +82,7 @@ for iteration in range(1, 60):
 
 	start_index = random.randint(0, len(score) - maxlen - 1)
 
-	for diversity in [1.]:
+	for diversity in [0.3, 0.5, 0.7, 1.]:
 		print()
 		print('----- diversity:', diversity)
 
@@ -92,7 +92,7 @@ for iteration in range(1, 60):
 		print('----- Generating with seed: "' + phrase + '"')
 		sys.stdout.write(generated+' ')
 
-		for i in range(70):
+		for i in range(300):
 			xv = np.zeros((1, maxlen, len(notes)))
 			for t, note in enumerate(phrase):
 				xv[0, t, notes_indices[note]] = 1.
